@@ -1,0 +1,35 @@
+#Pritunl
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-3.0.list
+echo "deb http://repo.pritunl.com/stable/apt trusty main" > /etc/apt/sources.list.d/pritunl.list
+apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7F0CEB10
+apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv CF8E292A
+apt-get update
+sudo iptables -A INPUT -p udp -m udp --sport 9700 --dport 1025:65355 -j ACCEPT
+sudo iptables -A INPUT -p tcp -m tcp --sport 9700 --dport 1025:65355 -j ACCEPT
+sudo iptables -A INPUT -p udp -m udp` --sport 9760 --dport 1025:65355 -j ACCEPT
+
+#TukarMasa
+ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+
+#squid3
+apt-get -y install squid3
+cp /etc/squid3/squid.conf /etc/squid3/squid.conf.orig
+wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/azmintr/pritunl/master/squid3.conf" 
+MYIP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0' | grep -v '192.168'`;
+sed -i s/xxxxxxxxx/$MYIP/g /etc/squid3/squid.conf;
+service squid3 restart
+
+# About
+clear
+echo "Script ini hanya mengandungi :-"
+echo "-Pritunl"
+echo "-MongoDB"
+echo "-Squid Proxy Bos:$MYIP:60000 dan 8080"
+echo " Azmin 77"
+echo "TimeZone   :  Malaysia"
+echo "Vnstat     :  http://$MYIP:81/vnstat"
+echo "Pritunl    :  https://$MYIP"
+echo "Sila login ke pritunl untuk process step seterusnya"
+echo "Sila copy kod dibawah dan paste untuk masuk ke Pritunl Bro"
+echi " by @azmin77 Thank For Supporr"
+pritunl setup-key
